@@ -1,0 +1,113 @@
+<p id="notice"><%= notice %></p>
+
+<div class="container">
+  <div class="filter">
+    <%= form_tag posts_path, method: :get, class: "form-inline" do %>
+
+       <div class="row">
+        <div class="col-md-4">
+          <%= label_tag "Price" %>
+        </div>
+        <div class="col-md-2">
+          <%= label_tag :bedrooms %>
+        </div>
+        <div class="col-md-2">
+          <%= label_tag :bathrooms %>
+        </div>
+        <div class="col-md-4">
+          <%= label_tag :neighborhood %>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-md-4">
+          <%= text_field_tag :min_price, params["min_price"], placeholder: "minimum"%>
+          <%= text_field_tag :max_price, params["max_price"], placeholder: "maximum" %>
+        </div>
+        <div class="col-md-2">
+          <%= text_field_tag :bedrooms, params["bedrooms"], placeholder: "# of beds" %>
+        </div>
+        <div class="col-md-2">
+          <%= text_field_tag :bathrooms, params["bathrooms"], placeholder: "# of baths"%>
+        </div>
+        <div class="col-md-4">
+          <%= select_tag(:neighborhood, options_from_collection_for_select(Location.all, :name, :name, params[:neighborhood]), { include_blank: true }) %>
+        </div>
+      </div>
+      
+
+      <div class="row">
+        <div class="col-md-4">
+          <%= label_tag :min_sqft %>
+          <%= label_tag :max_sqft %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <%= text_field_tag :min_sqft, params["min_sqft"], placeholder: "minimum", class: "form-control input-sm" %>
+          <%= text_field_tag :max_sqft, params["max_sqft"], placeholder: "maximum", class: "form-control input-sm" %>
+        </div>
+        <div class="col-md-1">
+          <%= label_tag :cats %>
+          <%= check_box_tag :cats, "YES", params["cats"] %>
+        </div>
+        <div class="col-md-1">
+          <%= label_tag :dogs %>
+          <%= check_box_tag :dogs, "YES", params["dogs"] %>
+        </div>
+        <div class="col-md-2">
+          <%= label_tag "Washer/dryer in unit" %>
+          <%= check_box_tag :w_d_in_unit, "YES", params["w_d_in_unit"] %>
+        </div>
+        <div class="col-md-2">
+          <%= label_tag :street_parking %>
+          <%= check_box_tag :street_parking, "YES", params["street_parking"] %>
+        </div>
+        <div class="col-md-2">
+          <%= submit_tag "Search", name: nil %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <table class="table">
+    <thead>
+     <tr>
+       <th class="center">Preview</th>
+       <th class="center">Heading</th>
+       <th class="center">Price</th>
+       <th class="center">Beds</th>
+       <th class="center">Baths</th>
+       <th class="center">Neighborhood</th>
+       <th class="center">Last Updated</th>
+     </tr>
+    </thead>
+
+    <tbody>
+      <% @posts.each do |post| %>
+        <tr>
+          <td class="center" width="13%" height="120px">
+            <% if post.images.empty? %>
+              <%= image_tag "http://www.emeraldresourcerealty.com/assets/web/images/no-image.png", class: "thumbnail" %>
+            <% else %>
+              <%= image_tag post.images.first.url, class: "thumbnail" %>
+            <% end %>
+          </td>
+          <td class="center" style="vertical-align:middle"><%= link_to post.heading, post %></td>
+          <td class="center" style="vertical-align:middle"><%= number_to_currency(post.price, precision: 0) %></td>
+          <td class="center" style="vertical-align:middle"><%= post.bedrooms %></td>
+          <td class="center" style="vertical-align:middle"><%= post.bathrooms %></td>
+          <td class="center" style="vertical-align:middle"><%= post.neighborhood %></td>
+          <td class="center" style="vertical-align:middle"><%= "#{time_ago_in_words(Time.at(post.timestamp.to_i))} ago" %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= will_paginate @posts, renderer: BootstrapPagination::Rails %>
+
+  <br>
+
+</div>
