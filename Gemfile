@@ -24,5 +24,5 @@ gem 'will_paginate', '~> 3.0.6'
 gem 'will_paginate-bootstrap'
 
 group :production, :staging do
-  gem "pg"
+  gem 'pg', '~> 0.18'
 end
