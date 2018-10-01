@@ -24,5 +24,5 @@ gem 'will_paginate', '~> 3.0.6'
 gem 'will_paginate-bootstrap'
 
 group :production, :staging do
-  gem 'sqlite3'
+  gem "pg", "1.0.0"
 end
